@@ -63,6 +63,7 @@ cc_library(
         "//tensorflow_serving/config:platform_config_cc_proto",
         "//tensorflow_serving/servables/tensorflow:saved_model_bundle_source_adapter_cc_proto",
         "//tensorflow_serving/servables/tensorflow:session_bundle_config_cc_proto",
+        "//tensorflow_serving/servables/tvm:tvm_source_adapter_proto",
     ],
 )
 
@@ -92,6 +93,7 @@ cc_library(
         "//tensorflow_serving/resources:resource_values",
         "//tensorflow_serving/servables/tensorflow:predict_util",
         "//tensorflow_serving/servables/tensorflow:saved_model_bundle_source_adapter",
+        "//tensorflow_serving/servables/tvm:tvm_source_adapter"
         "//tensorflow_serving/sources/storage_path:file_system_storage_path_source",
         "//tensorflow_serving/util:event_bus",
         "//tensorflow_serving/util:unique_ptr_with_deps",
@@ -236,6 +238,7 @@ cc_library(
         "//tensorflow_serving/servables/tensorflow:predict_impl",
         "//tensorflow_serving/servables/tensorflow:regression_service",
         "//tensorflow_serving/servables/tensorflow:thread_pool_factory",
+        "//tensorflow_serving/servables/tvm:predict_impl"
         "@com_github_grpc_grpc//:grpc++",
         "@org_tensorflow//tensorflow/core:lib",
         "@org_tensorflow//tensorflow/core:protos_all_cc",
@@ -313,6 +316,7 @@ cc_library(
         "//tensorflow_serving/servables/tensorflow:get_model_metadata_impl",
         "//tensorflow_serving/servables/tensorflow:predict_impl",
         "//tensorflow_serving/servables/tensorflow:regression_service",
+        "//tensorflow_serving/servables/tvm:predict_impl",
         "//tensorflow_serving/util:json_tensor",
         "@com_google_absl//absl/strings",
         "@com_google_absl//absl/time",
@@ -332,6 +336,12 @@ SUPPORTED_TENSORFLOW_OPS = if_v2([]) + if_not_v2([
     "@org_tensorflow//tensorflow/contrib:contrib_ops_op_lib",
 ]) + [
     "@org_tensorflow_text//tensorflow_text:ops_lib",
+]
+
+# TVM
+TVM_DEPS = [
+    "//tensorflow_serving/servables/tvm:tvm_source_adapter",
+    "//tensorflow_serving/servables/tvm:predict_impl",
 ]
 
 cc_library(
@@ -373,7 +383,7 @@ cc_library(
         "//tensorflow_serving/servables/tensorflow:util",
         "//tensorflow_serving/servables/tensorflow:thread_pool_factory",
         "//tensorflow_serving/servables/tensorflow:thread_pool_factory_config_cc_proto",
-    ] + SUPPORTED_TENSORFLOW_OPS,
+    ] + TVM_DEPS + SUPPORTED_TENSORFLOW_OPS,
 )
 
 cc_library(

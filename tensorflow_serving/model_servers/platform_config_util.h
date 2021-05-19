@@ -28,6 +28,9 @@ namespace serving {
 PlatformConfigMap CreateTensorFlowPlatformConfigMap(
     const SessionBundleConfig& session_bundle_config);
 
+PlatformConfigMap CreateTVMPlatformConfigMap(
+    PlatformConfigMap platform_config_map, const TVMConfig& tvm_config);
+
 }  // namespace serving
 }  // namespace tensorflow
 
