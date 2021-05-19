@@ -48,14 +48,14 @@ cc_library(
         "//visibility:public",
     ],
     deps = [
-        "@com_github_dmlc_tvm//:tvm_runtime",
+        "@com_github_suluner_tvm//:tvm_runtime",
         ":ndarray_util",
         "//tensorflow_serving/core:simple_loader",
     ],
-    includes = ["@com_github_dmlc_tvm//3rdparty/dmlc-core/include",
-	        "@com_github_dmlc_tvm//include",
-	        "@com_github_dmlc_tvm//3rdparty/dlpack/include",
-		"@com_github_dmlc_tvm//src/runtime"],
+    includes = ["@com_github_suluner_tvm//3rdparty/dmlc-core/include",
+	        "@com_github_suluner_tvm//include",
+	        "@com_github_suluner_tvm//3rdparty/dlpack/include",
+		"@com_github_suluner_tvm//src/runtime"],
     alwayslink = 1,
 )
 
@@ -118,17 +118,17 @@ cc_library(
         "//visibility:public",
     ],
     deps = [
-        "@com_github_dmlc_tvm//:tvm_runtime",
+        "@com_github_suluner_tvm//:tvm_runtime",
         "//tensorflow_serving/apis:predict_proto",
         "//tensorflow_serving/core:servable_handle",
         "@org_tensorflow//tensorflow/core:framework",
         "@org_tensorflow//tensorflow/core:lib",
         "@com_google_absl//absl/strings",
     ],
-    includes = ["@com_github_dmlc_tvm//3rdparty/dmlc-core/include",
-	        "@com_github_dmlc_tvm//include",
-	        "@com_github_dmlc_tvm//3rdparty/dlpack/include",
-		"@com_github_dmlc_tvm//src/runtime"],
+    includes = ["@com_github_suluner_tvm//3rdparty/dmlc-core/include",
+	        "@com_github_suluner_tvm//include",
+	        "@com_github_suluner_tvm//3rdparty/dlpack/include",
+		"@com_github_suluner_tvm//src/runtime"],
 )
 
 
