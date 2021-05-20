@@ -1,7 +1,7 @@
 model_config_list: {
     config: { 
         name: "tvm_test", 
-        base_path: "/mnt/serving/tensorflow_serving/g3doc/serving_tvm/model",
+        base_path: "/root/serving/tensorflow_serving/g3doc/serving_tvm/model",
         model_platform: "tvm"
     }, 
 }
