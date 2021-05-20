@@ -1,4 +1,4 @@
-!# /bin/bash
+#! /bin/bash
 
 TF_SERVING_BUILD_OPTIONS="--config=release"
 

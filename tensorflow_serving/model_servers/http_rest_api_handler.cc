@@ -286,8 +286,8 @@ Status HttpRestApiHandler::GetInfoMap(
     const ModelSpec& model_spec, const string& signature_name,
     ::google::protobuf::Map<string, tensorflow::TensorInfo>* infomap) {
   ServableHandle<SavedModelBundle> bundle;
-  #TF_RETURN_IF_ERROR(core_->GetServableHandle(model_spec, &bundle));
-  
+  //TF_RETURN_IF_ERROR(core_->GetServableHandle(model_spec, &bundle));
+
   ServableHandle<TVMBundle> tvm_bundle;
 
   Status status = core_->GetServableHandle(model_spec, &bundle);
