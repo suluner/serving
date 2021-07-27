@@ -24,8 +24,8 @@ namespace tensorflow {
 namespace serving {
 using tvm::runtime::NDArray;
 
-  Status TVMPredictor::Predict(ServerCore* core, const ModelSpec& model_spec,
-                const PredictRequest& request, PredictResponse* response) {
+  Status TVMPredictor::Predict(const RunOptions& run_options, ServerCore* core,
+                 const PredictRequest& request, PredictResponse* response) {
     if (!request.has_model_spec()) {
       return tensorflow::Status(tensorflow::error::INVALID_ARGUMENT,
                                 "Missing ModelSpec");
@@ -34,7 +34,7 @@ using tvm::runtime::NDArray;
     
   }
 
-  Status PredictWithModelSpec(const RunOptions& run_options, ServerCore* core,
+  Status TVMPredictor::PredictWithModelSpec(const RunOptions& run_options, ServerCore* core,
                                 const ModelSpec& model_spec,
                                 const PredictRequest& request,
                                 PredictResponse* response){

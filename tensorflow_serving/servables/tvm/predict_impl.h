@@ -27,7 +27,7 @@ class TVMPredictor: public Predictor{
  public:
   TVMPredictor() = default;
 
-  Status Predict(ServerCore* core, const ModelSpec& model_spec,
+  Status Predict(const RunOptions& run_options, ServerCore* core,
                  const PredictRequest& request, PredictResponse* response);
 
   Status PredictWithModelSpec(const RunOptions& run_options, ServerCore* core,

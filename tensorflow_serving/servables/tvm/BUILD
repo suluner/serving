@@ -72,6 +72,7 @@ cc_library(
         "//tensorflow_serving/apis:predict_proto",
         "//tensorflow_serving/core:servable_handle",
         "//tensorflow_serving/model_servers:server_core",
+        "//tensorflow_serving/model_servers:predictor",
     ],
 )
 
@@ -108,6 +109,7 @@ cc_library(
         "//tensorflow_serving/apis:get_model_metadata_proto",
         "//tensorflow_serving/core:servable_handle",
         "//tensorflow_serving/model_servers:server_core",
+        "//tensorflow_serving/model_servers:get_model_metadata",
     ],
 )
 

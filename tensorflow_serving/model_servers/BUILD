@@ -338,6 +338,41 @@ SUPPORTED_TENSORFLOW_OPS = if_v2([]) + if_not_v2([
     "@org_tensorflow_text//tensorflow_text:ops_lib",
 ]
 
+cc_library(
+    name = "predictor",
+    hdrs = ["predictor.h"],
+    visibility = [
+        "//visibility:public",
+    ],
+    deps = [
+        "//tensorflow_serving/servables/tensorflow:predict_util",
+        "//tensorflow_serving/servables/tensorflow:thread_pool_factory",
+        "//tensorflow_serving/servables/tensorflow:util",
+        "//tensorflow_serving/apis:predict_cc_proto",
+        "//tensorflow_serving/core:servable_handle",
+        "//tensorflow_serving/model_servers:server_core",
+        "@com_google_absl//absl/strings",
+        "@org_tensorflow//tensorflow/cc/saved_model:loader",
+        "@org_tensorflow//tensorflow/core:lib",
+        "@org_tensorflow//tensorflow/core:protos_all_cc",
+    ],
+)
+
+cc_library(
+    name = "get_model_metadata",
+    hdrs = ["get_model_metadata.h"],
+    visibility = [
+        "//visibility:public",
+    ],
+    deps = [
+        "//tensorflow_serving/apis:get_model_metadata_cc_proto",
+        "//tensorflow_serving/core:servable_handle",
+        "//tensorflow_serving/model_servers:server_core",
+        "@org_tensorflow//tensorflow/cc/saved_model:loader",
+        "@org_tensorflow//tensorflow/core:lib",
+    ],
+)
+
 # TVM
 TVM_DEPS = [
     "//tensorflow_serving/servables/tvm:tvm_source_adapter",
