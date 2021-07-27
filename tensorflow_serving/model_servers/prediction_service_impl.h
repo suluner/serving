@@ -43,12 +43,12 @@ class PredictionServiceImpl final : public PredictionService::Service {
       : core_(options.server_core),
         enforce_session_run_timeout_(options.enforce_session_run_timeout),
         thread_pool_factory_(options.thread_pool_factory) {
-    if(core_->options_.model_server_config.model_config_list().config(0).model_platform() == kTVMModelPlatform) {
-      predictor_ = new TVMPredictor();
-      get_model_meta_data_ = new TVMGetModelMetadata();
+    if(core_->GetOptions().model_server_config.model_config_list().config(0).model_platform() == kTVMModelPlatform) {
+      predictor_ = std::make_unique<TVMPredictor>();
+      get_model_meta_data_ = std::make_unique<TVMGetModelMetadata>();
     } else {
-      predictor_ = new TensorflowPredictor();
-      get_model_meta_data_ = new TensorflowGetModelMetadata();
+      predictor_ = std::make_unique<TensorflowPredictor>();
+      get_model_meta_data_ = std::make_unique<TensorflowGetModelMetadata>();
     }
   }
 

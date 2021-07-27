@@ -28,7 +28,7 @@ class TensorflowGetModelMetadata:public BaseGetModelMetadata {
  public:
   // Like GetModelMetadata(), but uses 'model_spec' instead of the one embedded
   // in 'request'.
-  static Status GetModelMetadataWithModelSpec(
+  Status GetModelMetadataWithModelSpec(
       ServerCore* core, const ModelSpec& model_spec,
       const GetModelMetadataRequest& request,
       GetModelMetadataResponse* response);

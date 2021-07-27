@@ -28,10 +28,10 @@ namespace serving {
 // Utility methods for implementation of PredictionService::Predict.
 class Predictor {
  public:
-  Status Predict(const RunOptions& run_options, ServerCore* core,
+  virtual Status Predict(const RunOptions& run_options, ServerCore* core,
                  const PredictRequest& request, PredictResponse* response) = 0;
 
-  Status PredictWithModelSpec(const RunOptions& run_options, ServerCore* core,
+  virtual Status PredictWithModelSpec(const RunOptions& run_options, ServerCore* core,
                               const ModelSpec& model_spec,
                               const PredictRequest& request,
                               PredictResponse* response) = 0;

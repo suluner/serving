@@ -33,7 +33,7 @@ class BaseGetModelMetadata {
 
   // Like GetModelMetadata(), but uses 'model_spec' instead of the one embedded
   // in 'request'.
-  static Status GetModelMetadataWithModelSpec(
+  virtual Status GetModelMetadataWithModelSpec(
       ServerCore* core, const ModelSpec& model_spec,
       const GetModelMetadataRequest& request,
       GetModelMetadataResponse* response) = 0;

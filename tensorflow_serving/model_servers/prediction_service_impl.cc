@@ -79,7 +79,7 @@ thread::ThreadPoolOptions GetThreadPoolOptions(
     ::grpc::ServerContext *context, const GetModelMetadataRequest *request,
     GetModelMetadataResponse *response) {
   const ::grpc::Status status = ToGRPCStatus(
-      GetModelMetadataImpl::GetModelMetadata(core_, *request, response));
+      get_model_meta_data_->GetModelMetadata(core_, *request, response));
   if (!status.ok()) {
     VLOG(1) << "GetModelMetadata failed: " << status.error_message();
   }

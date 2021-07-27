@@ -67,11 +67,11 @@ HttpRestApiHandler::HttpRestApiHandler(const RunOptions& run_options,
                                        ServerCore* core)
     : run_options_(run_options), core_(core) {
   if(core->options_.model_server_config.model_config_list().config(0).model_platform() == kTVMModelPlatform) {
-    predictor_ = new TVMPredictor();
-    get_model_meta_data_ = new TVMGetModelMetadata();
+    predictor_ = std::make_unique<TVMPredictor>();
+    get_model_meta_data_ = std::make_unique<TVMGetModelMetadata>();
   } else {
-    predictor_ = new TensorflowPredictor();
-    get_model_meta_data_ = new TensorflowGetModelMetadata();
+    predictor_ = std::make_unique<TensorflowPredictor>();
+    get_model_meta_data_ = std::make_unique<TensorflowGetModelMetadata>();
   }
 }
 
@@ -240,7 +240,7 @@ Status HttpRestApiHandler::ProcessModelMetadataRequest(
   auto* response =
       ::google::protobuf::Arena::CreateMessage<GetModelMetadataResponse>(&arena);
   TF_RETURN_IF_ERROR(
-      get_model_meta_data->GetModelMetadata(core_, *request, response));
+      get_model_meta_data_->GetModelMetadata(core_, *request, response));
   JsonPrintOptions opts;
   opts.add_whitespace = true;
   opts.always_print_primitive_fields = true;
@@ -297,22 +297,32 @@ Status HttpRestApiHandler::ProcessModelMetadataRequest(
 Status HttpRestApiHandler::GetInfoMap(
     const ModelSpec& model_spec, const string& signature_name,
     ::google::protobuf::Map<string, tensorflow::TensorInfo>* infomap) {
-  if(core->options_.model_server_config.model_config_list().config(0).model_platform() == kTVMModelPlatform) {
+  if(core_->GetOptions().model_server_config.model_config_list().config(0).model_platform() == kTVMModelPlatform) {
     ServableHandle<TVMBundle> bundle;
-  }
-  else if(core_->options_.model_server_config.model_type == ModelType::TVM) {
-    ServableHandle<SavedModelBundle> bundle;
-  }
-  TF_RETURN_IF_ERROR(core_->GetServableHandle(model_spec, &bundle));
-  const string& signame =
+    TF_RETURN_IF_ERROR(core_->GetServableHandle(model_spec, &bundle));
+    const string& signame =
       signature_name.empty() ? kDefaultServingSignatureDefKey : signature_name;
-  auto iter = bundle->meta_graph_def.signature_def().find(signame);
-  if (iter == bundle->meta_graph_def.signature_def().end()) {
+    auto iter = bundle->meta_graph_def.signature_def().find(signame);
+    if (iter == bundle->meta_graph_def.signature_def().end()) {
     return errors::InvalidArgument("Serving signature name: \"", signame,
                                    "\" not found in signature def");
+    }
+    *infomap = iter->second.inputs();
+    return Status::OK();
+  } else if(core_->GetOptions().model_server_config.model_config_list().config(0).model_platform() == kTensorFlowModelPlatform) {
+    ServableHandle<SavedModelBundle> bundle;
+    TF_RETURN_IF_ERROR(core_->GetServableHandle(model_spec, &bundle));
+    const string& signame =
+      signature_name.empty() ? kDefaultServingSignatureDefKey : signature_name;
+    auto iter = bundle->meta_graph_def.signature_def().find(signame);
+    if (iter == bundle->meta_graph_def.signature_def().end()) {
+      return errors::InvalidArgument("Serving signature name: \"", signame,
+                                   "\" not found in signature def");
+    }
+    *infomap = iter->second.inputs();
+    return Status::OK();
   }
-  *infomap = iter->second.inputs();
-  return Status::OK();
+  
 }
 
 }  // namespace serving

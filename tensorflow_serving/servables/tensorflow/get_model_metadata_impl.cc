@@ -53,7 +53,7 @@ Status SavedModelGetSignatureDef(ServerCore* core, const ModelSpec& model_spec,
 
 }  // namespace
 
-Status GetModelMetadataImpl::GetModelMetadataWithModelSpec(
+Status TensorflowGetModelMetadata::GetModelMetadataWithModelSpec(
     ServerCore* core, const ModelSpec& model_spec,
     const GetModelMetadataRequest& request,
     GetModelMetadataResponse* response) {
