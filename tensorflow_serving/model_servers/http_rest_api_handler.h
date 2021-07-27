@@ -26,7 +26,7 @@ limitations under the License.
 #include "tensorflow/core/lib/core/status.h"
 #include "tensorflow/core/protobuf/config.pb.h"
 #include "tensorflow/core/protobuf/meta_graph.pb.h"
-#include "tensorflow_serving/model_servers/get_model_meta_data.h"
+#include "tensorflow_serving/model_servers/get_model_metadata.h"
 
 namespace tensorflow {
 
