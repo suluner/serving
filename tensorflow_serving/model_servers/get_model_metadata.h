@@ -31,6 +31,8 @@ class BaseGetModelMetadata {
                                  const GetModelMetadataRequest& request,
                                  GetModelMetadataResponse* response);
 
+  Status ValidateGetModelMetadataRequest(const GetModelMetadataRequest& request);
+
   // Like GetModelMetadata(), but uses 'model_spec' instead of the one embedded
   // in 'request'.
   virtual Status GetModelMetadataWithModelSpec(
@@ -39,7 +41,7 @@ class BaseGetModelMetadata {
       GetModelMetadataResponse* response) {};
 };
 
-Status ValidateGetModelMetadataRequest(const GetModelMetadataRequest& request) {
+Status BaseGetModelMetadata::ValidateGetModelMetadataRequest(const GetModelMetadataRequest& request) {
   if (request.metadata_field_size() == 0) {
     return tensorflow::Status(
         tensorflow::error::INVALID_ARGUMENT,
