@@ -19,18 +19,13 @@ limitations under the License.
 #include "tensorflow/core/lib/core/status.h"
 #include "tensorflow_serving/apis/get_model_metadata.pb.h"
 #include "tensorflow_serving/model_servers/server_core.h"
+#include "tensorflow_serving/model_servers/get_model_meta_data.h"
 
 namespace tensorflow {
 namespace serving {
 
-class GetModelMetadataImpl {
+class TensorflowGetModelMetadata:public GetModelMetadata {
  public:
-  static constexpr const char kSignatureDef[] = "signature_def";
-
-  static Status GetModelMetadata(ServerCore* core,
-                                 const GetModelMetadataRequest& request,
-                                 GetModelMetadataResponse* response);
-
   // Like GetModelMetadata(), but uses 'model_spec' instead of the one embedded
   // in 'request'.
   static Status GetModelMetadataWithModelSpec(

@@ -13,40 +13,28 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-#ifndef TENSORFLOW_SERVING_SERVABLES_TENSORFLOW_PREDICT_IMPL_H_
-#define TENSORFLOW_SERVING_SERVABLES_TENSORFLOW_PREDICT_IMPL_H_
+#ifndef TENSORFLOW_SERVING_MODEL_SERVERS_PREDICT_H_
+#define TENSORFLOW_SERVING_MODEL_SERVERS_PREDICT_H_
 
 #include "tensorflow/core/framework/tensor.pb.h"
 #include "tensorflow/core/lib/core/status.h"
 #include "tensorflow/core/protobuf/config.pb.h"
 #include "tensorflow_serving/apis/predict.pb.h"
 #include "tensorflow_serving/model_servers/server_core.h"
-#include "tensorflow_serving/model_servers/predictor.h"
-#include "tensorflow_serving/servables/tensorflow/thread_pool_factory.h"
 
 namespace tensorflow {
 namespace serving {
 
 // Utility methods for implementation of PredictionService::Predict.
-class TensorflowPredictor: public Predictor {
+class Predictor {
  public:
-  TensorflowPredictor() {}
-
-  explicit TensorflowPredictor(ThreadPoolFactory* thread_pool_factory)
-      : thread_pool_factory_(thread_pool_factory) {}
-
   Status Predict(const RunOptions& run_options, ServerCore* core,
-                 const PredictRequest& request, PredictResponse* response);
+                 const PredictRequest& request, PredictResponse* response) = 0;
 
-  // Like Predict(), but uses 'model_spec' instead of the one embedded in
-  // 'request'.
   Status PredictWithModelSpec(const RunOptions& run_options, ServerCore* core,
                               const ModelSpec& model_spec,
                               const PredictRequest& request,
-                              PredictResponse* response);
-
- private:
-  ThreadPoolFactory* thread_pool_factory_ = nullptr;
+                              PredictResponse* response) = 0;
 };
 
 }  // namespace serving

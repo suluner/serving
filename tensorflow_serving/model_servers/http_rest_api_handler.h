@@ -26,6 +26,7 @@ limitations under the License.
 #include "tensorflow/core/lib/core/status.h"
 #include "tensorflow/core/protobuf/config.pb.h"
 #include "tensorflow/core/protobuf/meta_graph.pb.h"
+#include "tensorflow_serving/model_servers/get_model_meta_data.h"
 
 namespace tensorflow {
 
@@ -34,7 +35,7 @@ class SignatureDef;
 namespace serving {
 
 class ServerCore;
-class TensorflowPredictor;
+class Predictor;
 class ModelSpec;
 
 // HttpRestApiHandler handles HTTP/REST APIs of TF serving.
@@ -115,7 +116,8 @@ class HttpRestApiHandler {
 
   const RunOptions run_options_;
   ServerCore* core_;
-  std::unique_ptr<TensorflowPredictor> predictor_;
+  std::unique_ptr<Predictor> predictor_;
+  std::unique_ptr<GetModelMetadata> get_model_meta_data_;
 };
 
 }  // namespace serving

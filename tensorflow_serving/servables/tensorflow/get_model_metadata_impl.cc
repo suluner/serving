@@ -32,21 +32,6 @@ namespace serving {
 
 namespace {
 
-Status ValidateGetModelMetadataRequest(const GetModelMetadataRequest& request) {
-  if (request.metadata_field_size() == 0) {
-    return tensorflow::Status(
-        tensorflow::error::INVALID_ARGUMENT,
-        "GetModelMetadataRequest must specify at least one metadata_field");
-  }
-  for (const auto& metadata_field : request.metadata_field()) {
-    if (metadata_field != GetModelMetadataImpl::kSignatureDef) {
-      return tensorflow::errors::InvalidArgument(
-          "Metadata field ", metadata_field, " is not supported");
-    }
-  }
-  return tensorflow::Status::OK();
-}
-
 Status SavedModelGetSignatureDef(ServerCore* core, const ModelSpec& model_spec,
                                  const GetModelMetadataRequest& request,
                                  GetModelMetadataResponse* response) {
@@ -68,32 +53,15 @@ Status SavedModelGetSignatureDef(ServerCore* core, const ModelSpec& model_spec,
 
 }  // namespace
 
-constexpr const char GetModelMetadataImpl::kSignatureDef[];
-
-Status GetModelMetadataImpl::GetModelMetadata(
-    ServerCore* core, const GetModelMetadataRequest& request,
-    GetModelMetadataResponse* response) {
-  if (!request.has_model_spec()) {
-    return tensorflow::Status(tensorflow::error::INVALID_ARGUMENT,
-                              "Missing ModelSpec");
-  }
-  return GetModelMetadataWithModelSpec(core, request.model_spec(), request,
-                                       response);
-}
-
 Status GetModelMetadataImpl::GetModelMetadataWithModelSpec(
     ServerCore* core, const ModelSpec& model_spec,
     const GetModelMetadataRequest& request,
     GetModelMetadataResponse* response) {
   TF_RETURN_IF_ERROR(ValidateGetModelMetadataRequest(request));
   for (const auto& metadata_field : request.metadata_field()) {
-    if (metadata_field == kSignatureDef) {
-      //TF_RETURN_IF_ERROR(
-      //    SavedModelGetSignatureDef(core, model_spec, request, response));
-      Status status = SavedModelGetSignatureDef(core, model_spec, request, response);
-      if (!status.ok()) {
-	      TF_RETURN_IF_ERROR(TVMModelGetSignatureDef(core, model_spec, request, response));
-      }
+    if (metadata_field == GetModelMetadata::kSignatureDef) {
+      TF_RETURN_IF_ERROR(
+          SavedModelGetSignatureDef(core, model_spec, request, response));
     } else {
       return tensorflow::errors::InvalidArgument(
           "MetadataField ", metadata_field, " is not supported");

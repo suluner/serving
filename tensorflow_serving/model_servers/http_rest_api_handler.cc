@@ -33,15 +33,20 @@ limitations under the License.
 #include "tensorflow/core/platform/threadpool_options.h"
 #include "tensorflow_serving/apis/model.pb.h"
 #include "tensorflow_serving/apis/predict.pb.h"
+#include "tensorflow_serving/config/model_server_config.pb.h"
 #include "tensorflow_serving/core/servable_handle.h"
 #include "tensorflow_serving/model_servers/get_model_status_impl.h"
 #include "tensorflow_serving/model_servers/http_rest_api_util.h"
 #include "tensorflow_serving/model_servers/server_core.h"
+#include "tensorflow_serving/model_servers/get_model_meta_data.h"
 #include "tensorflow_serving/servables/tensorflow/classification_service.h"
 #include "tensorflow_serving/servables/tensorflow/get_model_metadata_impl.h"
+#include "tensorflow_serving/servables/tvm/get_model_metadata_impl.h"
 #include "tensorflow_serving/servables/tensorflow/predict_impl.h"
+#include "tensorflow_serving/servables/tvm/predict_impl.h"
 #include "tensorflow_serving/servables/tensorflow/regression_service.h"
 #include "tensorflow_serving/util/json_tensor.h"
+#include "tensorflow_serving/model_servers/model_platform_types.h"
 
 #include "tensorflow_serving/servables/tvm/tvm_loader.h"
 
@@ -52,6 +57,7 @@ using protobuf::util::JsonPrintOptions;
 using protobuf::util::MessageToJsonString;
 using tensorflow::serving::ServerCore;
 using tensorflow::serving::TensorflowPredictor;
+using tensorflow::serving::TVMPredictor;
 
 using tensorflow::serving::TVMBundle;
 
@@ -59,9 +65,15 @@ const char* const HttpRestApiHandler::kPathRegex = kHTTPRestApiHandlerPathRegex;
 
 HttpRestApiHandler::HttpRestApiHandler(const RunOptions& run_options,
                                        ServerCore* core)
-    : run_options_(run_options),
-      core_(core),
-      predictor_(new TensorflowPredictor()) {}
+    : run_options_(run_options), core_(core) {
+  if(core->options_.model_server_config.model_config_list().config(0).model_platform() == kTVMModelPlatform) {
+    predictor_ = new TVMPredictor();
+    get_model_meta_data_ = new TVMGetModelMetadata();
+  } else {
+    predictor_ = new TensorflowPredictor();
+    get_model_meta_data_ = new TensorflowGetModelMetadata();
+  }
+}
 
 HttpRestApiHandler::~HttpRestApiHandler() {}
 
@@ -220,7 +232,7 @@ Status HttpRestApiHandler::ProcessModelMetadataRequest(
   auto* request =
       ::google::protobuf::Arena::CreateMessage<GetModelMetadataRequest>(&arena);
   // We currently only support the kSignatureDef metadata field
-  request->add_metadata_field(GetModelMetadataImpl::kSignatureDef);
+  request->add_metadata_field(GetModelMetadata::kSignatureDef);
   TF_RETURN_IF_ERROR(FillModelSpecWithNameVersionAndLabel(
       model_name, model_version, model_version_label,
       request->mutable_model_spec()));
@@ -228,7 +240,7 @@ Status HttpRestApiHandler::ProcessModelMetadataRequest(
   auto* response =
       ::google::protobuf::Arena::CreateMessage<GetModelMetadataResponse>(&arena);
   TF_RETURN_IF_ERROR(
-      GetModelMetadataImpl::GetModelMetadata(core_, *request, response));
+      get_model_meta_data->GetModelMetadata(core_, *request, response));
   JsonPrintOptions opts;
   opts.add_whitespace = true;
   opts.always_print_primitive_fields = true;
@@ -251,13 +263,13 @@ Status HttpRestApiHandler::ProcessModelMetadataRequest(
 
   tensorflow::serving::SignatureDefMap signature_def_map;
   if (response->metadata().end() ==
-      response->metadata().find(GetModelMetadataImpl::kSignatureDef)) {
+      response->metadata().find(GetModelMetadata::kSignatureDef)) {
     return errors::Internal(
         "Failed to find 'signature_def' key in the GetModelMetadataResponse "
         "metadata map.");
   }
   bool unpack_status = response->metadata()
-                           .at(GetModelMetadataImpl::kSignatureDef)
+                           .at(GetModelMetadata::kSignatureDef)
                            .UnpackTo(&signature_def_map);
   if (!unpack_status) {
     return errors::Internal(
@@ -285,26 +297,13 @@ Status HttpRestApiHandler::ProcessModelMetadataRequest(
 Status HttpRestApiHandler::GetInfoMap(
     const ModelSpec& model_spec, const string& signature_name,
     ::google::protobuf::Map<string, tensorflow::TensorInfo>* infomap) {
-  ServableHandle<SavedModelBundle> bundle;
-  //TF_RETURN_IF_ERROR(core_->GetServableHandle(model_spec, &bundle));
-
-  ServableHandle<TVMBundle> tvm_bundle;
-
-  Status status = core_->GetServableHandle(model_spec, &bundle);
-  if (!status.ok()) {
-    TF_RETURN_IF_ERROR(core_->GetServableHandle(model_spec, &tvm_bundle));
-    const string& signame =
-      signature_name.empty() ? kDefaultServingSignatureDefKey : signature_name;
-    auto iter = tvm_bundle->meta_graph_def.signature_def().find(signame);
-
-    if (iter == tvm_bundle->meta_graph_def.signature_def().end()) {
-      return errors::InvalidArgument("Serving signature name: \"", signame,
-                                   "\" not found in signature def");
-    }
-    *infomap = iter->second.inputs();
-    return Status::OK();
+  if(core->options_.model_server_config.model_config_list().config(0).model_platform() == kTVMModelPlatform) {
+    ServableHandle<TVMBundle> bundle;
   }
-
+  else if(core_->options_.model_server_config.model_type == ModelType::TVM) {
+    ServableHandle<SavedModelBundle> bundle;
+  }
+  TF_RETURN_IF_ERROR(core_->GetServableHandle(model_spec, &bundle));
   const string& signame =
       signature_name.empty() ? kDefaultServingSignatureDefKey : signature_name;
   auto iter = bundle->meta_graph_def.signature_def().find(signame);

@@ -18,8 +18,11 @@ limitations under the License.
 
 #include "tensorflow_serving/apis/prediction_service.grpc.pb.h"
 #include "tensorflow_serving/model_servers/server_core.h"
+#include "tensorflow_serving/model_servers/predictor.h"
 #include "tensorflow_serving/servables/tensorflow/predict_impl.h"
+#include "tensorflow_serving/servables/tvm/predict_impl.h"
 #include "tensorflow_serving/servables/tensorflow/thread_pool_factory.h"
+#include "tensorflow_serving/model_servers/model_platform_types.h"
 
 namespace tensorflow {
 namespace serving {
@@ -35,9 +38,14 @@ class PredictionServiceImpl final : public PredictionService::Service {
 
   explicit PredictionServiceImpl(const Options& options)
       : core_(options.server_core),
-        predictor_(new TensorflowPredictor(options.thread_pool_factory)),
         enforce_session_run_timeout_(options.enforce_session_run_timeout),
-        thread_pool_factory_(options.thread_pool_factory) {}
+        thread_pool_factory_(options.thread_pool_factory) {
+    if(core_->options_.model_server_config.model_config_list().config(0).model_platform() == kTVMModelPlatform) {
+      predictor_ = new TVMPredictor();
+    } else {
+      predictor_ = new TensorflowPredictor();
+    }
+  }
 
   ::grpc::Status Predict(::grpc::ServerContext* context,
                          const PredictRequest* request,
@@ -61,7 +69,7 @@ class PredictionServiceImpl final : public PredictionService::Service {
 
  private:
   ServerCore* core_;
-  std::unique_ptr<TensorflowPredictor> predictor_;
+  std::unique_ptr<Predictor> predictor_;
   const bool enforce_session_run_timeout_;
   ThreadPoolFactory* thread_pool_factory_;
 };

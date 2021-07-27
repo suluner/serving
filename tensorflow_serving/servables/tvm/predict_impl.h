@@ -14,6 +14,7 @@ limitations under the License.
 #define TENSORFLOW_SERVING_SERVABLES_TVM_PREDICT_IMPL_H_
 
 #include "tensorflow_serving/model_servers/server_core.h"
+#include "tensorflow_serving/model_servers/predictor.h"
 #include "tensorflow_serving/servables/tvm/tvm_loader.h"
 #include "tensorflow_serving/apis/predict.pb.h"
 
@@ -22,12 +23,17 @@ namespace serving {
 
 // Utility methods for implementation of predict.
 // Initialized and called from Tensorflow servable.
-class TVMPredictor {
+class TVMPredictor: public Predictor{
  public:
   TVMPredictor() = default;
 
   Status Predict(ServerCore* core, const ModelSpec& model_spec,
                  const PredictRequest& request, PredictResponse* response);
+
+  Status PredictWithModelSpec(const RunOptions& run_options, ServerCore* core,
+                              const ModelSpec& model_spec,
+                              const PredictRequest& request,
+                              PredictResponse* response);
 };
 
 }  // namespace serving
