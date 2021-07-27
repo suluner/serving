@@ -26,9 +26,6 @@ limitations under the License.
 #include "tensorflow_serving/servables/tensorflow/predict_util.h"
 #include "tensorflow_serving/servables/tensorflow/util.h"
 
-#include "tensorflow_serving/servables/tvm/tvm_loader.h"
-#include "tensorflow_serving/servables/tvm/predict_impl.h"
-
 namespace tensorflow {
 namespace serving {
 

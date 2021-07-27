@@ -25,8 +25,6 @@ limitations under the License.
 #include "tensorflow/core/lib/core/errors.h"
 #include "tensorflow_serving/core/servable_handle.h"
 
-#include "tensorflow_serving/servables/tvm/get_model_metadata_impl.h"
-
 namespace tensorflow {
 namespace serving {
 
