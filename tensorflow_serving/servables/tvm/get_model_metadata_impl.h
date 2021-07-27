@@ -21,7 +21,7 @@ limitations under the License.
 namespace tensorflow {
 namespace serving {
 
-class TVMGetModelMetadata:  public GetModelMetadata{
+class TVMGetModelMetadata:  public BaseGetModelMetadata{
  public:
   // Like GetModelMetadata(), but uses 'model_spec' instead of the one embedded
   // in 'request'.

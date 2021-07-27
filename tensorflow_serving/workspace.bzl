@@ -85,7 +85,7 @@ def tf_serving_workspace():
 
     # ===== tvm (tvm.ai) dependencies =====
     new_git_repository(
-        name = "com_github_suluner_tvm"
+        name = "com_github_suluner_tvm",
         remote = "https://github.com/suluner/tvm.git",
         init_submodules = True,
         branch = "feature_tf_serving",

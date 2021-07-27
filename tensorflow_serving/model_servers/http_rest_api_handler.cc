@@ -232,7 +232,7 @@ Status HttpRestApiHandler::ProcessModelMetadataRequest(
   auto* request =
       ::google::protobuf::Arena::CreateMessage<GetModelMetadataRequest>(&arena);
   // We currently only support the kSignatureDef metadata field
-  request->add_metadata_field(GetModelMetadata::kSignatureDef);
+  request->add_metadata_field(BaseGetModelMetadata::kSignatureDef);
   TF_RETURN_IF_ERROR(FillModelSpecWithNameVersionAndLabel(
       model_name, model_version, model_version_label,
       request->mutable_model_spec()));
@@ -263,13 +263,13 @@ Status HttpRestApiHandler::ProcessModelMetadataRequest(
 
   tensorflow::serving::SignatureDefMap signature_def_map;
   if (response->metadata().end() ==
-      response->metadata().find(GetModelMetadata::kSignatureDef)) {
+      response->metadata().find(BaseGetModelMetadata::kSignatureDef)) {
     return errors::Internal(
         "Failed to find 'signature_def' key in the GetModelMetadataResponse "
         "metadata map.");
   }
   bool unpack_status = response->metadata()
-                           .at(GetModelMetadata::kSignatureDef)
+                           .at(BaseGetModelMetadata::kSignatureDef)
                            .UnpackTo(&signature_def_map);
   if (!unpack_status) {
     return errors::Internal(

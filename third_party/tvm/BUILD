@@ -17,7 +17,7 @@ cc_library(
         "src/runtime/workspace_pool.cc",
         "src/runtime/module.cc",
         "src/runtime/registry.cc",
-        "src/runtime/file_util.cc",
+        "src/runtime/file_utils.cc",
         "src/runtime/threading_backend.cc",
         "src/runtime/thread_pool.cc",
         "src/runtime/ndarray.cc",

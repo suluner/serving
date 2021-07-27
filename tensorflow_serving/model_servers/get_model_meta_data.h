@@ -23,7 +23,7 @@ limitations under the License.
 namespace tensorflow {
 namespace serving {
 
-class GetModelMetadata {
+class BaseGetModelMetadata {
  public:
   static constexpr const char kSignatureDef[] = "signature_def";
 
@@ -46,7 +46,7 @@ Status ValidateGetModelMetadataRequest(const GetModelMetadataRequest& request) {
         "GetModelMetadataRequest must specify at least one metadata_field");
   }
   for (const auto& metadata_field : request.metadata_field()) {
-    if (metadata_field != GetModelMetadata::kSignatureDef) {
+    if (metadata_field != BaseGetModelMetadata::kSignatureDef) {
       return tensorflow::errors::InvalidArgument(
           "Metadata field ", metadata_field, " is not supported");
     }
@@ -54,7 +54,7 @@ Status ValidateGetModelMetadataRequest(const GetModelMetadataRequest& request) {
   return tensorflow::Status::OK();
 }
 
-Status GetModelMetadata::GetModelMetadata(
+Status BaseGetModelMetadata::GetModelMetadata(
     ServerCore* core, const GetModelMetadataRequest& request,
     GetModelMetadataResponse* response) {
   if (!request.has_model_spec()) {

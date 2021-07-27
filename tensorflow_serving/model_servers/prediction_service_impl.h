@@ -23,6 +23,9 @@ limitations under the License.
 #include "tensorflow_serving/servables/tvm/predict_impl.h"
 #include "tensorflow_serving/servables/tensorflow/thread_pool_factory.h"
 #include "tensorflow_serving/model_servers/model_platform_types.h"
+#include "tensorflow_serving/model_servers/get_model_meta_data.h"
+#include "tensorflow_serving/servables/tensorflow/get_model_metadata_impl.h"
+#include "tensorflow_serving/servables/tvm/get_model_metadata_impl.h"
 
 namespace tensorflow {
 namespace serving {
@@ -42,8 +45,10 @@ class PredictionServiceImpl final : public PredictionService::Service {
         thread_pool_factory_(options.thread_pool_factory) {
     if(core_->options_.model_server_config.model_config_list().config(0).model_platform() == kTVMModelPlatform) {
       predictor_ = new TVMPredictor();
+      get_model_meta_data_ = new TVMGetModelMetadata();
     } else {
       predictor_ = new TensorflowPredictor();
+      get_model_meta_data_ = new TensorflowGetModelMetadata();
     }
   }
 
@@ -72,6 +77,7 @@ class PredictionServiceImpl final : public PredictionService::Service {
   std::unique_ptr<Predictor> predictor_;
   const bool enforce_session_run_timeout_;
   ThreadPoolFactory* thread_pool_factory_;
+  std::unique_ptr<BaseGetModelMetadata> get_model_meta_data_;
 };
 
 }  // namespace serving

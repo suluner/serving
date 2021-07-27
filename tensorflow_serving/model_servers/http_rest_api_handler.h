@@ -117,7 +117,7 @@ class HttpRestApiHandler {
   const RunOptions run_options_;
   ServerCore* core_;
   std::unique_ptr<Predictor> predictor_;
-  std::unique_ptr<GetModelMetadata> get_model_meta_data_;
+  std::unique_ptr<BaseGetModelMetadata> get_model_meta_data_;
 };
 
 }  // namespace serving
