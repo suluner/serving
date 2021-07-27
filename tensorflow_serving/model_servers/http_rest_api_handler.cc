@@ -66,7 +66,7 @@ const char* const HttpRestApiHandler::kPathRegex = kHTTPRestApiHandlerPathRegex;
 HttpRestApiHandler::HttpRestApiHandler(const RunOptions& run_options,
                                        ServerCore* core)
     : run_options_(run_options), core_(core) {
-  if(core->options_.model_server_config.model_config_list().config(0).model_platform() == kTVMModelPlatform) {
+  if(!core->GetModelPlatform().compare(kTVMModelPlatform)) {
     predictor_ = std::make_unique<TVMPredictor>();
     get_model_meta_data_ = std::make_unique<TVMGetModelMetadata>();
   } else {
@@ -297,7 +297,7 @@ Status HttpRestApiHandler::ProcessModelMetadataRequest(
 Status HttpRestApiHandler::GetInfoMap(
     const ModelSpec& model_spec, const string& signature_name,
     ::google::protobuf::Map<string, tensorflow::TensorInfo>* infomap) {
-  if(core_->GetOptions().model_server_config.model_config_list().config(0).model_platform() == kTVMModelPlatform) {
+  if(!core_->GetModelPlatform().compare(kTVMModelPlatform)) {
     ServableHandle<TVMBundle> bundle;
     TF_RETURN_IF_ERROR(core_->GetServableHandle(model_spec, &bundle));
     const string& signame =
@@ -309,7 +309,7 @@ Status HttpRestApiHandler::GetInfoMap(
     }
     *infomap = iter->second.inputs();
     return Status::OK();
-  } else if(core_->GetOptions().model_server_config.model_config_list().config(0).model_platform() == kTensorFlowModelPlatform) {
+  } else if(!core_->GetModelPlatform().compare(kTensorFlowModelPlatform)) {
     ServableHandle<SavedModelBundle> bundle;
     TF_RETURN_IF_ERROR(core_->GetServableHandle(model_spec, &bundle));
     const string& signame =

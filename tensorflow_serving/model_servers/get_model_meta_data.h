@@ -27,7 +27,7 @@ class BaseGetModelMetadata {
  public:
   static constexpr const char kSignatureDef[] = "signature_def";
 
-  static Status GetModelMetadata(ServerCore* core,
+  Status GetModelMetadata(ServerCore* core,
                                  const GetModelMetadataRequest& request,
                                  GetModelMetadataResponse* response);
 
@@ -36,7 +36,7 @@ class BaseGetModelMetadata {
   virtual Status GetModelMetadataWithModelSpec(
       ServerCore* core, const ModelSpec& model_spec,
       const GetModelMetadataRequest& request,
-      GetModelMetadataResponse* response) = 0;
+      GetModelMetadataResponse* response) {};
 };
 
 Status ValidateGetModelMetadataRequest(const GetModelMetadataRequest& request) {

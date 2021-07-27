@@ -270,9 +270,10 @@ class ServerCore : public Manager {
     return options_.predict_response_tensor_serialization_option;
   }
 
-  Options GetOptions(){
-    return options_;
+  string GetModelPlatform(){
+    return options_.model_server_config.model_config_list().config(0).model_platform();
   }
+  
  protected:
   ServerCore(Options options);
 

@@ -46,7 +46,7 @@ Status SavedModelGetSignatureDef(ServerCore* core, const ModelSpec& model_spec,
   response_model_spec->set_name(bundle.id().name);
   response_model_spec->mutable_version()->set_value(bundle.id().version);
 
-  (*response->mutable_metadata())[GetModelMetadataImpl::kSignatureDef].PackFrom(
+  (*response->mutable_metadata())[BaseGetModelMetadata::kSignatureDef].PackFrom(
       signature_def_map);
   return tensorflow::Status::OK();
 }
