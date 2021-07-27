@@ -16,7 +16,7 @@ limitations under the License.
 #include "tensorflow/core/lib/core/status.h"
 #include "tensorflow_serving/apis/get_model_metadata.pb.h"
 #include "tensorflow_serving/model_servers/server_core.h"
-#include "tensorflow_serving/model_servers/get_model_meta_data.h"
+#include "tensorflow_serving/model_servers/get_model_metadata.h"
 
 namespace tensorflow {
 namespace serving {

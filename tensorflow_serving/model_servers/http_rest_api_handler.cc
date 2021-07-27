@@ -38,7 +38,7 @@ limitations under the License.
 #include "tensorflow_serving/model_servers/get_model_status_impl.h"
 #include "tensorflow_serving/model_servers/http_rest_api_util.h"
 #include "tensorflow_serving/model_servers/server_core.h"
-#include "tensorflow_serving/model_servers/get_model_meta_data.h"
+#include "tensorflow_serving/model_servers/get_model_metadata.h"
 #include "tensorflow_serving/servables/tensorflow/classification_service.h"
 #include "tensorflow_serving/servables/tensorflow/get_model_metadata_impl.h"
 #include "tensorflow_serving/servables/tvm/get_model_metadata_impl.h"

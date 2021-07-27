@@ -23,7 +23,7 @@ limitations under the License.
 #include "tensorflow_serving/servables/tvm/predict_impl.h"
 #include "tensorflow_serving/servables/tensorflow/thread_pool_factory.h"
 #include "tensorflow_serving/model_servers/model_platform_types.h"
-#include "tensorflow_serving/model_servers/get_model_meta_data.h"
+#include "tensorflow_serving/model_servers/get_model_metadata.h"
 #include "tensorflow_serving/servables/tensorflow/get_model_metadata_impl.h"
 #include "tensorflow_serving/servables/tvm/get_model_metadata_impl.h"
 
