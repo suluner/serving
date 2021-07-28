@@ -3,6 +3,8 @@
 namespace tensorflow {
 namespace serving {
 
+constexpr const char BaseGetModelMetadata::kSignatureDef[];
+
 Status BaseGetModelMetadata::ValidateGetModelMetadataRequest(const GetModelMetadataRequest& request) {
   if (request.metadata_field_size() == 0) {
     return tensorflow::Status(
