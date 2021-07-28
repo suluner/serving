@@ -38,7 +38,7 @@ class BaseGetModelMetadata {
   virtual Status GetModelMetadataWithModelSpec(
       ServerCore* core, const ModelSpec& model_spec,
       const GetModelMetadataRequest& request,
-      GetModelMetadataResponse* response);
+      GetModelMetadataResponse* response) {};
 };
 
 }  // namespace serving

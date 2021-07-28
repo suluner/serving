@@ -23,6 +23,7 @@ cc_library(
       "include/tvm/runtime/**/*.h",
       "src/runtime/**/*.h",
       "src/runtime/*.h",
+      "src/support/*.h",
     ]),
     includes = [
       "3rdparty/dmlc-core/include",
@@ -30,6 +31,7 @@ cc_library(
       "3rdparty/dlpack/include",
 	    "include",
 		  "src/runtime",
+      "src/support",
     ],
     alwayslink = 1,
 )
