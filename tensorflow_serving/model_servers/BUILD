@@ -362,6 +362,7 @@ cc_library(
 
 cc_library(
     name = "get_model_metadata",
+    srcs = ["get_model_metadata.cc"],
     hdrs = ["get_model_metadata.h"],
     visibility = [
         "//visibility:public",
