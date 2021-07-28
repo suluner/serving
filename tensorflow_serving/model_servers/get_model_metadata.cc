@@ -1,4 +1,4 @@
-#include "tensorflow_serving/model_servers/get_model_status_impl.h"
+#include "tensorflow_serving/model_servers/get_model_metadata.h"
 
 namespace tensorflow {
 namespace serving {
