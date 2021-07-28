@@ -310,6 +310,7 @@ cc_library(
         ":get_model_status_impl",
         ":http_rest_api_util",
         ":server_core",
+        ":get_model_metadata",
         "//tensorflow_serving/apis:model_cc_proto",
         "//tensorflow_serving/apis:predict_cc_proto",
         "//tensorflow_serving/core:servable_handle",
@@ -369,9 +370,7 @@ cc_library(
     ],
     deps = [
         "//tensorflow_serving/apis:get_model_metadata_cc_proto",
-        "//tensorflow_serving/core:servable_handle",
         "//tensorflow_serving/model_servers:server_core",
-        "@org_tensorflow//tensorflow/cc/saved_model:loader",
         "@org_tensorflow//tensorflow/core:lib",
     ],
 )

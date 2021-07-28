@@ -38,7 +38,6 @@ limitations under the License.
 #include "tensorflow_serving/model_servers/get_model_status_impl.h"
 #include "tensorflow_serving/model_servers/http_rest_api_util.h"
 #include "tensorflow_serving/model_servers/server_core.h"
-#include "tensorflow_serving/model_servers/get_model_metadata.h"
 #include "tensorflow_serving/servables/tensorflow/classification_service.h"
 #include "tensorflow_serving/servables/tensorflow/get_model_metadata_impl.h"
 #include "tensorflow_serving/servables/tvm/get_model_metadata_impl.h"
@@ -58,8 +57,9 @@ using protobuf::util::MessageToJsonString;
 using tensorflow::serving::ServerCore;
 using tensorflow::serving::TensorflowPredictor;
 using tensorflow::serving::TVMPredictor;
-
 using tensorflow::serving::TVMBundle;
+
+constexpr const char BaseGetModelMetadata::kSignatureDef[];
 
 const char* const HttpRestApiHandler::kPathRegex = kHTTPRestApiHandlerPathRegex;
 
@@ -232,7 +232,7 @@ Status HttpRestApiHandler::ProcessModelMetadataRequest(
   auto* request =
       ::google::protobuf::Arena::CreateMessage<GetModelMetadataRequest>(&arena);
   // We currently only support the kSignatureDef metadata field
-  request->add_metadata_field(BaseGetModelMetadata::kSignatureDef);
+  request->add_metadata_field(kSignatureDef);
   TF_RETURN_IF_ERROR(FillModelSpecWithNameVersionAndLabel(
       model_name, model_version, model_version_label,
       request->mutable_model_spec()));
@@ -263,13 +263,13 @@ Status HttpRestApiHandler::ProcessModelMetadataRequest(
 
   tensorflow::serving::SignatureDefMap signature_def_map;
   if (response->metadata().end() ==
-      response->metadata().find(BaseGetModelMetadata::kSignatureDef)) {
+      response->metadata().find(kSignatureDef)) {
     return errors::Internal(
         "Failed to find 'signature_def' key in the GetModelMetadataResponse "
         "metadata map.");
   }
   bool unpack_status = response->metadata()
-                           .at(BaseGetModelMetadata::kSignatureDef)
+                           .at(kSignatureDef)
                            .UnpackTo(&signature_def_map);
   if (!unpack_status) {
     return errors::Internal(

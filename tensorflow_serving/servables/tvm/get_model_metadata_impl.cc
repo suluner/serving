@@ -50,13 +50,15 @@ Status TVMModelGetSignatureDef(
 
 } // namespace
 
+constexpr const char BaseGetModelMetadata::kSignatureDef[];
+
 Status TVMGetModelMetadata::GetModelMetadataWithModelSpec(
     ServerCore* core, const ModelSpec& model_spec,
     const GetModelMetadataRequest& request,
     GetModelMetadataResponse* response) {
   TF_RETURN_IF_ERROR(ValidateGetModelMetadataRequest(request));
   for (const auto& metadata_field : request.metadata_field()) {
-    if (metadata_field == BaseGetModelMetadata::kSignatureDef) {
+    if (metadata_field == kSignatureDef) {
       Status status = TVMModelGetSignatureDef(core, model_spec, request, response);
     } else {
       return tensorflow::errors::InvalidArgument(
