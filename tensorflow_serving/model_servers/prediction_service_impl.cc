@@ -68,7 +68,7 @@ thread::ThreadPoolOptions GetThreadPoolOptions(
                          /*runtime=*/"GRPC",
                          Env::Default()->NowMicros() - start);
   } else {
-    VLOG(1) << "Predict failed: " << status.error_message();
+    //VLOG(1) << "Predict failed: " << status.error_message();
   }
   RecordModelRequestCount(request->model_spec().name(), tf_status);
 
@@ -81,7 +81,7 @@ thread::ThreadPoolOptions GetThreadPoolOptions(
   const ::grpc::Status status = ToGRPCStatus(
       get_model_meta_data_->GetModelMetadata(core_, *request, response));
   if (!status.ok()) {
-    VLOG(1) << "GetModelMetadata failed: " << status.error_message();
+    //VLOG(1) << "GetModelMetadata failed: " << status.error_message();
   }
   return status;
 }
@@ -108,7 +108,7 @@ thread::ThreadPoolOptions GetThreadPoolOptions(
                          /*runtime=*/"GRPC",
                          Env::Default()->NowMicros() - start);
   } else {
-    VLOG(1) << "Classify request failed: " << status.error_message();
+    //VLOG(1) << "Classify request failed: " << status.error_message();
   }
   RecordModelRequestCount(request->model_spec().name(), tf_status);
 
@@ -137,7 +137,7 @@ thread::ThreadPoolOptions GetThreadPoolOptions(
                          /*runtime=*/"GRPC",
                          Env::Default()->NowMicros() - start);
   } else {
-    VLOG(1) << "Regress request failed: " << status.error_message();
+    //VLOG(1) << "Regress request failed: " << status.error_message();
   }
   RecordModelRequestCount(request->model_spec().name(), tf_status);
 
@@ -157,7 +157,7 @@ thread::ThreadPoolOptions GetThreadPoolOptions(
       run_options, core_, GetThreadPoolOptions(thread_pool_factory_), *request,
       response));
   if (!status.ok()) {
-    VLOG(1) << "MultiInference request failed: " << status.error_message();
+    //VLOG(1) << "MultiInference request failed: " << status.error_message();
   }
   return status;
 }
