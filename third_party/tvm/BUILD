@@ -11,24 +11,10 @@ exports_files(["LICENSE"])
 
 cc_library(
     name = "tvm_runtime",
-    srcs = [
-        "src/runtime/c_runtime_api.cc",
-        "src/runtime/cpu_device_api.cc",
-        "src/runtime/workspace_pool.cc",
-        "src/runtime/module.cc",
-        "src/runtime/registry.cc",
-        "src/runtime/file_utils.cc",
-        "src/runtime/threading_backend.cc",
-        "src/runtime/thread_pool.cc",
-        "src/runtime/ndarray.cc",
-        "src/runtime/dso_library.cc",
-        "src/runtime/system_library.cc",
-        "src/runtime/library_module.cc",
-        "src/runtime/logging.cc",
-        "src/runtime/object.cc",
-        "src/runtime/container.cc",
-        "src/runtime/graph_executor/graph_executor.cc",
-    ],
+    srcs = glob([
+      "src/runtime/*.cc",
+      "src/runtime/vm/*.cc"
+    ]),
     hdrs = glob([
       "3rdparty/dmlc-core/include/**/*.h",
       "include/**/*.h",
