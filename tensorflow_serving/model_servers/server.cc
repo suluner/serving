@@ -307,6 +307,7 @@ Status Server::BuildAndStart(const Options& server_options) {
   options.flush_filesystem_caches = server_options.flush_filesystem_caches;
   options.allow_version_labels_for_unavailable_models =
       server_options.allow_version_labels_for_unavailable_models;
+  options.enable_cors_support = server_options.enable_cors_support;
 
   TF_RETURN_IF_ERROR(ServerCore::Create(std::move(options), &server_core_));
 
@@ -350,7 +351,6 @@ Status Server::BuildAndStart(const Options& server_options) {
   prediction_service_ =
       absl::make_unique<PredictionServiceImpl>(predict_server_options);
 
-  profiler_service_ = tensorflow::profiler::CreateProfilerService();
 
   ::grpc::ServerBuilder builder;
   // If defined, listen to a tcp port for gRPC/HTTP.
@@ -368,7 +368,11 @@ Status Server::BuildAndStart(const Options& server_options) {
   }
   builder.RegisterService(model_service_.get());
   builder.RegisterService(prediction_service_.get());
-  builder.RegisterService(profiler_service_.get());
+  if (server_options.enable_profiler) {
+    profiler_service_ = tensorflow::profiler::CreateProfilerService();
+    builder.RegisterService(profiler_service_.get());
+    LOG(INFO) << "Profiler service is enabled";
+  }
   builder.SetMaxMessageSize(tensorflow::kint32max);
   const std::vector<GrpcChannelArgument> channel_arguments =
       parseGrpcChannelArgs(server_options.grpc_channel_arguments);
@@ -383,6 +387,7 @@ Status Server::BuildAndStart(const Options& server_options) {
       builder.AddChannelArgument(channel_argument.key, channel_argument.value);
     }
   }
+
   ::grpc::ResourceQuota res_quota;
   res_quota.SetMaxThreads(server_options.grpc_max_threads);
   builder.SetResourceQuota(res_quota);

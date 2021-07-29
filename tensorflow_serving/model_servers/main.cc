@@ -75,6 +75,9 @@ int main(int argc, char** argv) {
                        "set, will be auto set based on number of CPUs."),
       tensorflow::Flag("rest_api_timeout_in_ms", &options.http_timeout_in_ms,
                        "Timeout for HTTP/REST API calls."),
+      tensorflow::Flag("rest_api_enable_cors_support",
+                       &options.enable_cors_support,
+                       "Enable CORS headers in response"),
       tensorflow::Flag("enable_batching", &options.enable_batching,
                        "enable batching"),
       tensorflow::Flag(
@@ -235,7 +238,9 @@ int main(int argc, char** argv) {
           "EXPERIMENTAL; CAN BE REMOVED ANYTIME! "
           "Enable XLA:CPU JIT (default is disabled). With XLA:CPU JIT "
           "disabled, models utilizing this feature will return bad Status "
-          "on first compilation request.")};
+          "on first compilation request."),
+      tensorflow::Flag("enable_profiler", &options.enable_profiler,
+                       "Enable profiler service.")};
 
   const auto& usage = tensorflow::Flags::Usage(argv[0], flag_list);
   if (!tensorflow::Flags::Parse(&argc, argv, flag_list)) {

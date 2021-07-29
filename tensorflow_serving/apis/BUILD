@@ -130,16 +130,36 @@ tf_jspb_proto_library(
 )
 
 serving_proto_library(
+    name = "logging_proto",
+    srcs = ["logging.proto"],
+    cc_api_version = 2,
+    deps = [
+        ":model_proto",
+        "//tensorflow_serving/config:logging_config_proto",
+    ],
+)
+
+serving_proto_library_py(
+    name = "logging_proto_py_pb2",
+    srcs = ["logging.proto"],
+    proto_library = "logging_proto",
+    deps = [
+        ":model_proto_py_pb2",
+        "//tensorflow_serving/config:logging_config_proto_py_pb2",
+    ],
+)
+
+serving_proto_library(
     name = "prediction_log_proto",
     srcs = ["prediction_log.proto"],
     cc_api_version = 2,
     deps = [
         ":classification_proto",
         ":inference_proto",
+        ":logging_proto",
         ":predict_proto",
         ":regression_proto",
         ":session_service_proto",
-        "//tensorflow_serving/core:logging_proto",
     ],
 )
 
@@ -153,7 +173,7 @@ serving_proto_library_py(
         ":predict_proto_py_pb2",
         ":regression_proto_py_pb2",
         ":session_service_proto_py_pb2",
-        "//tensorflow_serving/core:logging_proto_py_pb2",
+        "//tensorflow_serving/apis:logging_proto_py_pb2",
     ],
 )
 
@@ -201,12 +221,32 @@ serving_go_grpc_library(
 )
 
 serving_proto_library(
+    name = "status_proto",
+    srcs = ["status.proto"],
+    cc_api_version = 2,
+    deps = [
+        serving_tensorflow_proto_dep(
+            "@org_tensorflow//tensorflow/core:protos_all",
+        ),
+    ],
+)
+
+serving_proto_library_py(
+    name = "status_proto_py_pb2",
+    srcs = ["status.proto"],
+    proto_library = "status_proto",
+    deps = [
+        "@org_tensorflow//tensorflow/core:protos_all_py",
+    ],
+)
+
+serving_proto_library(
     name = "model_management_proto",
     srcs = ["model_management.proto"],
     cc_api_version = 2,
     deps = [
+        ":status_proto",
         "//tensorflow_serving/config:model_server_config_proto",
-        "//tensorflow_serving/util:status_proto",
     ],
 )
 
@@ -215,8 +255,8 @@ serving_proto_library_py(
     srcs = ["model_management.proto"],
     proto_library = "model_management_proto",
     deps = [
+        ":status_proto_py_pb2",
         "//tensorflow_serving/config:model_server_config_proto_py_pb2",
-        "//tensorflow_serving/util:status_proto_py_pb2",
     ],
 )
 
@@ -226,7 +266,7 @@ serving_proto_library(
     cc_api_version = 2,
     deps = [
         ":model_proto",
-        "//tensorflow_serving/util:status_proto",
+        ":status_proto",
     ],
 )
 
@@ -236,7 +276,7 @@ serving_proto_library_py(
     proto_library = "get_model_status_proto",
     deps = [
         ":model_proto_py_pb2",
-        "//tensorflow_serving/util:status_proto_py_pb2",
+        ":status_proto_py_pb2",
     ],
 )
 
