@@ -24,7 +24,7 @@ using tvm::runtime::NDArray;
 std::string GetNameHint(TVMBundle *bundle, int type, int index) {
   tvm::runtime::TVMRetValue rv;
   rv = bundle->mod.GetFunction("get_name_hint")(type, index);
-  if (rv.type_code() != kTVMType) {
+  if (rv.type_code() != kTVMDataType) {
     return *rv.ptr<std::string>();
   } else {
     return rv.operator std::string();

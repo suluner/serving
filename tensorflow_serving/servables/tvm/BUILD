@@ -52,46 +52,16 @@ cc_library(
         ":ndarray_util",
         "//tensorflow_serving/core:simple_loader",
     ],
-    includes = ["@com_github_suluner_tvm//3rdparty/dmlc-core/include",
-	        "@com_github_suluner_tvm//include",
-	        "@com_github_suluner_tvm//3rdparty/dlpack/include",
-		"@com_github_suluner_tvm//src/runtime"],
+    includes = [
+        "@com_github_suluner_tvm//3rdparty/dmlc-core/include",
+        "@com_github_suluner_tvm//3rdparty/dlpack/include",
+        "@com_github_suluner_tvm//3rdparty/compiler-rt",
+	    "@com_github_suluner_tvm//include",
+		"@com_github_suluner_tvm//src/runtime",
+        "@com_github_suluner_tvm//src/support",
+    ],
     alwayslink = 1,
 )
-
-#cc_library(
-#    name = "tvm_runtime",
-#    srcs = ["tvm_runtime_pack.cc"],
-#    hdrs = [
-#      "//third_party/tvm/src/runtime/c_runtime_api.cc",
-#      "//third_party/tvm/src/runtime/runtime_base.h",
-#      "//third_party/tvm/src/runtime/cpu_device_api.cc",
-#      "//third_party/tvm/src/runtime/workspace_pool.h",
-#      "//third_party/tvm/src/runtime/workspace_pool.cc",
-#      "//third_party/tvm/src/runtime/module_util.cc",
-#      "//third_party/tvm/src/runtime/module_util.h",
-#      "//third_party/tvm/src/runtime/module.cc",
-#      "//third_party/tvm/src/runtime/file_util.h",
-#      "//third_party/tvm/src/runtime/meta_data.h",
-#      "//third_party/tvm/src/runtime/registry.cc",
-#      "//third_party/tvm/src/runtime/file_util.cc",
-#      "//third_party/tvm/src/runtime/threading_backend.cc",
-#      "//third_party/tvm/src/runtime/thread_pool.cc",
-#      "//third_party/tvm/src/runtime/ndarray.cc",
-#      "//third_party/tvm/src/runtime/dso_module.cc",
-#      "//third_party/tvm/src/runtime/system_lib_module.cc",
-#      "//third_party/tvm/src/runtime/graph/graph_runtime.cc",
-#      "//third_party/tvm/src/runtime/graph/graph_runtime.h",
-#    ],
-#    visibility = [
-#        "//visibility:public",
-#    ],
-#    includes = ["//third_party/tvm/3rdparty/dmlc-core/include",
-#	        "//third_party/tvm/include",
-#	        "//third_party/tvm/3rdparty/dlpack/include",
-#		"//third_party/tvm/tvm/src/runtime"],
-#    alwayslink = 1,
-#)
 
 cc_library(
     name = "predict_impl",
@@ -125,10 +95,12 @@ cc_library(
         "@org_tensorflow//tensorflow/core:lib",
         "@com_google_absl//absl/strings",
     ],
-    includes = ["@com_github_suluner_tvm//3rdparty/dmlc-core/include",
-	        "@com_github_suluner_tvm//include",
-	        "@com_github_suluner_tvm//3rdparty/dlpack/include",
-		"@com_github_suluner_tvm//src/runtime"],
+    includes = [
+        "@com_github_suluner_tvm//3rdparty/dmlc-core/include",
+	    "@com_github_suluner_tvm//include",
+	    "@com_github_suluner_tvm//3rdparty/dlpack/include",
+		"@com_github_suluner_tvm//src/runtime"
+    ],
 )
 
 

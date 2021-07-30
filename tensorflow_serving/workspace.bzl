@@ -88,6 +88,6 @@ def tf_serving_workspace():
         name = "com_github_suluner_tvm",
         remote = "https://github.com/suluner/tvm.git",
         init_submodules = True,
-        branch = "dev_v0.5",
+        branch = "feature_tf_serving",
         build_file = "@//third_party/tvm:BUILD"
     )

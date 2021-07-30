@@ -11,31 +11,28 @@ exports_files(["LICENSE"])
 
 cc_library(
     name = "tvm_runtime",
-    srcs = [
-        "src/runtime/c_runtime_api.cc",
-        "src/runtime/cpu_device_api.cc",
-        "src/runtime/workspace_pool.cc",
-        "src/runtime/module_util.cc",
-        "src/runtime/module.cc",
-        "src/runtime/registry.cc",
-        "src/runtime/file_util.cc",
-        "src/runtime/threading_backend.cc",
-        "src/runtime/thread_pool.cc",
-        "src/runtime/ndarray.cc",
-        "src/runtime/dso_module.cc",
-        "src/runtime/system_lib_module.cc",
-        "src/runtime/graph/graph_runtime.cc",
-    ],
+    srcs = glob([
+      "src/runtime/*.cc",
+      "src/runtime/vm/*.cc",
+      "src/runtime/graph_executor/*.cc"
+    ]),
     hdrs = glob([
       "3rdparty/dmlc-core/include/**/*.h",
-      "include/**/*.h",
+      "3rdparty/compiler-rt/*.h",
       "3rdparty/dlpack/include/**/*.h",
+      "include/tvm/runtime/**/*.h",
+      "include/tvm/runtime/*.h",
       "src/runtime/**/*.h",
+      "src/runtime/*.h",
+      "src/support/*.h",
     ]),
-    includes = ["3rdparty/dmlc-core/include",
-	        "include",
-	        "3rdparty/dlpack/include",
-		"src/runtime",
+    includes = [
+      "3rdparty/dmlc-core/include",
+      "3rdparty/compiler-rt",
+      "3rdparty/dlpack/include",
+	    "include",
+	    "src/runtime",
+      "src/support",
     ],
     alwayslink = 1,
 )

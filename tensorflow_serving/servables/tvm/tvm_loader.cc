@@ -49,7 +49,8 @@ Status TVMLoadModel(const std::string& export_dir,
   int device_id = 0;
 
   // get global function module for graph runtime
-  bundle->mod = (*tvm::runtime::Registry::Get("tvm.graph_runtime.create"))(json_data, mod_syslib, device_type, device_id);
+  const tvm::runtime::PackedFunc* graph_executor = tvm::runtime::Registry::Get("tvm.graph_executor.create");
+  bundle->mod = (*graph_executor)(json_data, mod_syslib, device_type, device_id);
 
   // get the function from the module(load patameters)
   tvm::runtime::PackedFunc load_params = bundle->mod.GetFunction("load_params");
@@ -58,7 +59,7 @@ Status TVMLoadModel(const std::string& export_dir,
   // Setup the meta data information.
   SignatureDef signature_def;
 
-  int num_inputs = bundle->mod.GetFunction("get_num_inputs")();
+  int num_inputs = bundle->mod.GetFunction("get_num_graph_inputs")();
   int num_outputs = bundle->mod.GetFunction("get_num_outputs")();
 
   NDArray ndarray;
