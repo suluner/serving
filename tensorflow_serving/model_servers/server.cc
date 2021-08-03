@@ -288,12 +288,9 @@ Status Server::BuildAndStart(const Options& server_options) {
     tvm_config.set_session_target("tvm_target");
     options.platform_config_map = CreateTVMPlatformConfigMap(
         options.platform_config_map, tvm_config);
-    LOG(INFO) << "Plug tvm platform to serving";
-
   } else {
     TF_RETURN_IF_ERROR(ParseProtoTextFile<PlatformConfigMap>(
         server_options.platform_config_file, &options.platform_config_map));
-    LOG(INFO) << "Not Plug tvm platform to serving";
   }
 
   options.custom_model_config_loader = &LoadCustomModelConfig;

@@ -45,7 +45,14 @@ Status TVMLoadModel(const std::string& export_dir,
   params_arr.data = params_data.c_str();
   params_arr.size = params_data.length();
 
-  int device_type = kDLCPU;
+  #ifdef CUDA
+    int device_type = kDLCUDA;
+    LOG(INFO) << "Using device: kDLCUDA";
+  #else
+    int device_type = kDLCPU;
+    LOG(INFO) << "Using device: kDLCPU";
+  #endif
+  
   int device_id = 0;
 
   // get global function module for graph runtime

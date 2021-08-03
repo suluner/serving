@@ -91,3 +91,11 @@ def tf_serving_workspace():
         branch = "feature_tf_serving",
         build_file = "@//third_party/tvm:BUILD"
     )
+
+    native.new_local_repository(
+        name = "my_cuda",
+        path = "/usr/local/cuda",
+        build_file = "@//third_party/tvm:cuda.BUILD",
+    )
+
+
